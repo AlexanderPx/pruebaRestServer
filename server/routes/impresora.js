@@ -7,6 +7,42 @@ const { json } = require('body-parser');
 
 
 
+app.get('/impresora/:id', (req, res) => {
+    let id = req.params.id;
+
+    Impresora.findById(id, (err, impresorabuscada) => {
+        if (err) {
+            return res.status(400).json({
+                ok: true,
+                err
+            })
+        }
+        if (!impresorabuscada) {
+            res.json({
+                ok: true,
+                err: {
+                    message: "Impresora no encontrada"
+                }
+            })
+        } else {
+            res.json({
+                ok: true,
+                impresora: {
+                    id: impresorabuscada._id,
+                    marca: impresorabuscada.marca,
+                    modelo: impresorabuscada.modelo,
+                    serie: impresorabuscada.serie,
+                    color: impresorabuscada.color,
+                    ip: impresorabuscada.ip,
+                    precio: impresorabuscada.precio
+                }
+            });
+        }
+
+    });
+
+});
+
 app.get('/impresora', (req, res) => {
 
     Impresora.find({}).exec((err, impresoras) => {
@@ -46,6 +82,7 @@ app.get('/impresora', (req, res) => {
         });
 
     })
+
 });
 
 app.post('/impresora', (req, res) => {
